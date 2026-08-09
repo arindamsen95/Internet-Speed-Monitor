@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+
+<node>
+
+<interface name="arindamsen95.NetworkSpeed">
+
+    <method name="GetDownload">
+        <arg type="d"
+             name="speed"
+             direction="out"/>
+    </method>
+
+
+    <method name="GetUpload">
+        <arg type="d"
+             name="speed"
+             direction="out"/>
+    </method>
+
+
+</interface>
+
+</node>
