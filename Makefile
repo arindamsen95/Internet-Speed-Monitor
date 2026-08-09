@@ -40,7 +40,8 @@ src/InterfaceDetector.o: src/InterfaceDetector.cpp \
 src/NetworkManager.o: src/NetworkManager.cpp \
                       src/NetworkManager.h \
                       src/NetworkMonitor.h \
-                      src/InterfaceDetector.h
+                      src/InterfaceDetector.h \
+                      src/NetworkSpeed.h
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 
