@@ -1,0 +1,10 @@
+{
+    "uuid": "internet-speed@arindamsen95",
+    "name": "Internet Speed Monitor",
+    "description": "Displays internet download and upload speed in the GNOME top panel.",
+    "version": 1,
+    "shell-version": [
+        "50",
+        "50.1"
+    ]
+}
