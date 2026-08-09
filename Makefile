@@ -1,59 +1,52 @@
 CXX = g++
 CC = gcc
 
-# Added -I flags so g++ can find headers in src/ and dbus/
-INCLUDES = -Isrc -Idbus
-
-CXXFLAGS = -std=c++17 -Wall $(INCLUDES) $(shell pkg-config --cflags gio-2.0)
-CFLAGS = -Wall $(INCLUDES) $(shell pkg-config --cflags gio-2.0)
+CXXFLAGS = -std=c++17 -Wall $(shell pkg-config --cflags gio-2.0)
+CFLAGS = -Wall $(shell pkg-config --cflags gio-2.0)
 
 LDLIBS = $(shell pkg-config --libs gio-2.0)
 
-TARGET = internet-speed-daemon
+TARGET = internet-speed
 
-# Object files placed inside src/ and dbus/
 OBJECTS = src/main.o \
           src/NetworkMonitor.o \
           src/InterfaceDetector.o \
           src/NetworkManager.o \
-          src/NetworkSpeedDBus.o \
-          dbus/DBusService.o
+          src/DBusService.o \
+          src/NetworkSpeedDBus.o
 
-# Installation paths used by Debian packager
-PREFIX ?= /usr
-BINDIR = $(DESTDIR)$(PREFIX)/bin
-DBUSDIR = $(DESTDIR)$(PREFIX)/share/dbus-1/services
-EXTDIR = $(DESTDIR)$(PREFIX)/share/gnome-shell/extensions/internet-speed@arindamsen95
 
-all: $(TARGET)
-
-# Link all objects together
 $(TARGET): $(OBJECTS)
 	$(CXX) $(OBJECTS) $(LDLIBS) -o $(TARGET)
 
-# C++ compilation rule for files in src/
-src/%.o: src/%.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-# C compilation rule for NetworkSpeedDBus.c in src/
-src/NetworkSpeedDBus.o: src/NetworkSpeedDBus.c
-	$(CC) $(CFLAGS) -c $< -o $@
+main.o: src/main.cpp src/NetworkManager.h src/DBusService.h
+	$(CXX) $(CXXFLAGS) -c src/main.cpp
 
-# C++ compilation rule for files in dbus/
-dbus/%.o: dbus/%.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-# Install rule required by Debian dpkg-buildpackage
-install: $(TARGET)
-	install -d $(BINDIR)
-	install -m 755 $(TARGET) $(BINDIR)/
-	install -d $(DBUSDIR)
-	install -m 644 dbus/arindamsen95.NetworkSpeed.service $(DBUSDIR)/
-	install -d $(EXTDIR)
-	install -m 644 extension/extension.js $(EXTDIR)/
-	install -m 644 extension/metadata.json $(EXTDIR)/
+NetworkMonitor.o: src/NetworkMonitor.cpp src/NetworkMonitor.h src/NetworkSpeed.h
+	$(CXX) $(CXXFLAGS) -c src/NetworkMonitor.cpp
+
+
+InterfaceDetector.o: src/InterfaceDetector.cpp src/InterfaceDetector.h
+	$(CXX) $(CXXFLAGS) -c src/InterfaceDetector.cpp
+
+
+NetworkManager.o: src/NetworkManager.cpp src/NetworkManager.h \
+                  src/NetworkMonitor.h src/InterfaceDetector.h
+	$(CXX) $(CXXFLAGS) -c src/NetworkManager.cpp
+
+
+DBusService.o: src/DBusService.cpp src/DBusService.h \
+               src/NetworkManager.h src/NetworkSpeedDBus.h
+	$(CXX) $(CXXFLAGS) -c src/DBusService.cpp
+
+
+NetworkSpeedDBus.o: src/NetworkSpeedDBus.c src/NetworkSpeedDBus.h
+	$(CC) $(CFLAGS) -c src/NetworkSpeedDBus.c
+
+
+.PHONY: clean
 
 clean:
-	rm -f src/*.o dbus/*.o $(TARGET)
-
-.PHONY: all clean install
+	rm -f *.o $(TARGET)
