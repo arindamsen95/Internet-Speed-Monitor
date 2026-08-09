@@ -1,10 +1,10 @@
 [Unit]
-Description=Internet Speed Monitor D-Bus Backend
+Description=Internet Speed Monitor
 After=graphical-session.target
 
 [Service]
 Type=simple
-ExecStart=/home/arindam/internet-speed/project_gnome_shell/internet-speed
+ExecStart=/usr/bin/internet-speed
 Restart=on-failure
 RestartSec=2
 
