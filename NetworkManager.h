@@ -6,7 +6,7 @@
 #include <memory>
 #include "NetworkMonitor.h"
 #include "InterfaceDetector.h"
-
+#include "NetworkSpeed.h"
 
 class NetworkManager
 {
@@ -33,6 +33,8 @@ public:
 
     const std::vector<
         std::unique_ptr<NetworkMonitor>>& getMonitors() const;
+        
+    NetworkSpeed getTotalSpeed() const;
 
 };
 

@@ -1,6 +1,10 @@
 CXX = g++
+CC = gcc
 
-CXXFLAGS = -std=c++17 -Wall
+CXXFLAGS = -std=c++17 -Wall $(shell pkg-config --cflags gio-2.0)
+CFLAGS = -Wall $(shell pkg-config --cflags gio-2.0)
+
+LDLIBS = $(shell pkg-config --libs gio-2.0)
 
 TARGET = internet-speed
 
@@ -8,14 +12,15 @@ OBJECTS = main.o \
           NetworkMonitor.o \
           InterfaceDetector.o \
           NetworkManager.o \
-          SpeedFormatter.o
+          DBusService.o \
+          NetworkSpeedDBus.o
 
 
 $(TARGET): $(OBJECTS)
-	$(CXX) $(OBJECTS) -o $(TARGET)
+	$(CXX) $(OBJECTS) $(LDLIBS) -o $(TARGET)
 
 
-main.o: main.cpp NetworkManager.h
+main.o: main.cpp NetworkManager.h DBusService.h
 	$(CXX) $(CXXFLAGS) -c main.cpp
 
 
@@ -32,8 +37,14 @@ NetworkManager.o: NetworkManager.cpp NetworkManager.h \
 	$(CXX) $(CXXFLAGS) -c NetworkManager.cpp
 
 
-SpeedFormatter.o: SpeedFormatter.cpp SpeedFormatter.h
-	$(CXX) $(CXXFLAGS) -c SpeedFormatter.cpp
+DBusService.o: DBusService.cpp DBusService.h \
+               NetworkManager.h NetworkSpeedDBus.h
+	$(CXX) $(CXXFLAGS) -c DBusService.cpp
+
+
+NetworkSpeedDBus.o: NetworkSpeedDBus.c NetworkSpeedDBus.h
+	$(CC) $(CFLAGS) -c NetworkSpeedDBus.c
+
 
 .PHONY: clean
 

@@ -1,70 +1,112 @@
+#include <fstream>
+#include <memory>
 #include <iostream>
 #include <iomanip>
-#include <string>
-#include <vector>
 #include <chrono>
 #include <thread>
-#include <memory>
+#include <string>
+
+#include <glib.h>
+
 #include "NetworkManager.h"
-#include "SpeedFormatter.h"
+#include "DBusService.h"
+
 
 using namespace std;
 
+
+// ============================================================
+// Timer callback
+// ============================================================
+
+static gboolean
+updateCallback(gpointer data)
+{
+    NetworkManager* manager =
+        static_cast<NetworkManager*>(data);
+
+
+    manager->updateInterfaces();
+
+    manager->update();
+
+
+    // Keep the timer running
+
+    return G_SOURCE_CONTINUE;
+}
+
+
+// ============================================================
+// Main
+// ============================================================
 
 int main()
 {
     NetworkManager manager;
 
 
-    while(true)
+    // --------------------------------------------------------
+    // Start D-Bus service
+    // --------------------------------------------------------
+
+    DBusService service(manager);
+
+
+    if(!service.start())
     {
-        this_thread::sleep_for(
-            chrono::seconds(1)
+        cerr
+            << "Failed to start D-Bus service"
+            << endl;
+
+        return 1;
+    }
+
+
+    // --------------------------------------------------------
+    // Do an initial update
+    // --------------------------------------------------------
+
+    manager.updateInterfaces();
+
+    manager.update();
+
+
+    // --------------------------------------------------------
+    // Create GLib main loop
+    // --------------------------------------------------------
+
+    GMainLoop* loop =
+        g_main_loop_new(
+            nullptr,
+            FALSE
         );
 
 
-        manager.updateInterfaces();
+    // --------------------------------------------------------
+    // Update network speed every second
+    // --------------------------------------------------------
 
-        manager.update();
+    g_timeout_add_seconds(
+        1,
+        updateCallback,
+        &manager
+    );
 
+    // --------------------------------------------------------
+    // Run event loop
+    // --------------------------------------------------------
 
-
-        cout << "\033[2J\033[1;1H";
-
-
-        cout << string(30, '=') << endl;
-        cout << "   Internet Speed Monitor\n";
-        cout << string(30, '=') << endl;
-
-
-
-        const auto& monitors =
-            manager.getMonitors();
+    g_main_loop_run(loop);
 
 
-        for(const auto& monitor : monitors)
-        {
-        
-            NetworkSpeed speed =
-                    monitor->getSpeed();
-                    
-            cout << "\nInterface: "
-                 << monitor->getName()
-                 << "\n";
+    // --------------------------------------------------------
+    // Cleanup
+    // --------------------------------------------------------
 
-            cout << setw(12)
-                 << "Download:"
-                 << setw(8)
-                 << formatSpeed(speed.downloadSpeed)
-                 << "\n";
+    service.stop();
 
-            cout << setw(12)
-                 << "Upload:"
-                 << setw(8)
-                 << formatSpeed(speed.uploadSpeed)
-                 << "\n";
-        }
-    }
+    g_main_loop_unref(loop);
 
 
     return 0;

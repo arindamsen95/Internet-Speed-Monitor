@@ -89,3 +89,26 @@ NetworkManager::getMonitors() const
 {
     return monitors;
 }
+
+NetworkSpeed NetworkManager::getTotalSpeed() const
+{
+    NetworkSpeed total{0.0, 0.0};
+
+
+    for(const auto& monitor : monitors)
+    {
+        NetworkSpeed speed =
+            monitor->getSpeed();
+
+
+        total.downloadSpeed +=
+            speed.downloadSpeed;
+
+
+        total.uploadSpeed +=
+            speed.uploadSpeed;
+    }
+
+
+    return total;
+}
