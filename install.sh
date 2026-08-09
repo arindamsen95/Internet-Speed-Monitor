@@ -282,3 +282,6 @@ echo
 echo "Check GNOME extension:"
 echo "    gnome-extensions info $EXTENSION_UUID"
 echo
+echo "If the extension is not visible immediately,"
+echo "log out and log back in." 
+echo
