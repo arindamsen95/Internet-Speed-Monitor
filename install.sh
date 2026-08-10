@@ -112,7 +112,7 @@ GNOME_EXTENSIONS_VERSION=$(gnome-extensions --version 2>/dev/null || true)
 echo "gnome-extensions: $GNOME_EXTENSIONS_VERSION"
 
 # ------------------------------------------------------------
-# Check GNOME Shell Version (Require == 50)
+# Check GNOME Shell Version (Require >45 && <50)
 # ------------------------------------------------------------
 
 if ! command -v gnome-shell >/dev/null 2>&1; then
@@ -134,9 +134,11 @@ GNOME_SHELL_MAJOR=$(echo "$GNOME_SHELL_VERSION" | cut -d. -f1)
 
 echo "GNOME Shell version: $GNOME_SHELL_VERSION"
 
-if [ "$GNOME_SHELL_MAJOR" -ne 50 ]; then
+MIN_GNOME_VERSION=45
+
+if [ "$GNOME_SHELL_MAJOR" -lt "$MIN_GNOME_VERSION" ]; then
     echo
-    echo "ERROR: This extension requires GNOME Shell 50."
+    echo "ERROR: This extension requires GNOME Shell $MIN_GNOME_VERSION or newer."
     echo "Detected GNOME Shell version: $GNOME_SHELL_VERSION"
     exit 1
 fi
