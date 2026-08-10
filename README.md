@@ -86,23 +86,6 @@ The backend exposes the following D-Bus service:
 * **Object path:** /arindamsen95/NetworkSpeed
 * **Interface:** arindamsen95.NetworkSpeed
 
-```text
-**Examples:**
-**Bus name:** arindamsen95.NetworkSpeed
-```
-
-
-
-```text
-**Object path:** /arindamsen95/NetworkSpeed
-```
-
-
-
-```text
-**Interface:** arindamsen95.NetworkSpeed
-```
-
 The interface provides two methods:
 
 ```text
