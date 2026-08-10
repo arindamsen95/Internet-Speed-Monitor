@@ -181,7 +181,7 @@ echo
 echo "Build completed successfully."
 
 # ------------------------------------------------------------
-# Install executable & D-Bus service (Requires sudo)
+# Install D-Bus service & Reload D-Bus (Requires sudo)
 # ------------------------------------------------------------
 
 echo
@@ -196,6 +196,9 @@ sudo install -Dm755 \
 sudo install -Dm644 \
     dbus/arindamsen95.NetworkSpeed.service \
     /usr/share/dbus-1/services/arindamsen95.NetworkSpeed.service
+
+# Force D-Bus session bus to reload service definitions immediately
+dbus-send --type=method_call --dest=org.freedesktop.DBus /org/freedesktop/DBus org.freedesktop.DBus.ReloadConfig 2>/dev/null || true
 
 echo "Executable installed: /usr/bin/$TARGET_BIN"
 echo "D-Bus service installed: /usr/share/dbus-1/services/arindamsen95.NetworkSpeed.service"
@@ -258,13 +261,20 @@ echo "Extension installed to: $EXTENSION_DIR"
 echo
 echo "Attempting to enable GNOME extension..."
 
+# Sleep 1 second to ensure GNOME Shell file watchers index the new folder
+sleep 1
+
 if gnome-extensions enable "$EXTENSION_UUID" 2>/dev/null; then
     echo "GNOME extension enabled."
 else
-    echo
-    echo "NOTE: Extension installed, but GNOME Shell needs a restart."
-    echo "Log out and log back in, then run:"
+echo
+    echo "======================================================="
+    echo "NOTICE: Wayland / GNOME Shell limitation detected."
+    echo "GNOME Shell requires a session refresh to register new extensions."
+    echo "Please log out and log back in (or press Alt+F2 -> r -> Enter on X11)."
+    echo "After logging back in, run:"
     echo "    gnome-extensions enable $EXTENSION_UUID"
+    echo "======================================================="
 fi
 
 # ------------------------------------------------------------
