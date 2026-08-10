@@ -148,22 +148,11 @@ The GNOME Shell extension receives these values and performs the final display f
 
 The project is currently designed for:
 
-* Ubuntu Linux
-* GNOME Shell 50
-* Wayland
-* C++17
-* GCC/G++
-* GLib
-* GIO
-* D-Bus
-* systemd
+* **OS:** Ubuntu Linux (or GNOME-based Linux distributions)
+* **Desktop Environment:** GNOME Shell 45 through 50+ (Wayland / X11)
+* **Compiler & Toolchain:** C++17, GCC/G++, make
+* **Libraries:** libglib2.0-dev, libgio-2.0-dev, D-Bus, systemd
 
-The GNOME extension uses the modern GNOME Shell extension API:
-
-```javascript
-import { Extension } from
-    'resource:///org/gnome/shell/extensions/extension.js';
-```
 
 ---
 
@@ -177,10 +166,9 @@ sudo apt install \
     build-essential \
     pkg-config \
     libglib2.0-dev \
-    libgio-2.0-dev
+    libgio-2.0-dev \
+    gnome-shell-extension-prefs
 ```
-
-The GNOME Shell extension requires GNOME Shell 50 or a compatible version.
 
 Check your GNOME Shell version with:
 
