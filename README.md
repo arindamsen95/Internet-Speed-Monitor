@@ -82,8 +82,12 @@ The backend does not directly interact with GNOME Shell.
 # D-Bus Interface
 
 The backend exposes the following D-Bus service:
+**Bus name:** arindamsen95.NetworkSpeed
+**Object path:** /arindamsen95/NetworkSpeed
+**Interface:** arindamsen95.NetworkSpeed
 
 ```text
+**Examples:**
 **Bus name:** arindamsen95.NetworkSpeed
 ```
 
