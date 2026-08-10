@@ -111,7 +111,6 @@ The GNOME Shell extension receives these values and performs the final display f
 
 ```text
 .
-.
 ├── extension/
 │   ├── extension.js
 │   └── metadata.json
