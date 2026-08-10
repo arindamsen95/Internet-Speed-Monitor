@@ -228,10 +228,10 @@ Switch to the GNOME Shell 50 branch if necessary:
 git checkout GNOME_Shell.V50
 ```
 
-Build the C++ backend:
+Install the project:
 
 ```bash
-make
+./install.sh
 ```
 
 The executable will be created as:
@@ -240,10 +240,10 @@ The executable will be created as:
 ./internet-speed
 ```
 
-To remove build files:
+To remove build files and project:
 
 ```bash
-make clean
+./uninstall.sh
 ```
 
 ---
