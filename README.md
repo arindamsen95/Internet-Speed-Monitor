@@ -6,25 +6,20 @@ The project consists of a C++ backend that monitors network traffic and exposes 
 
 ## Features
 
-* Real-time download speed monitoring
-* Real-time upload speed monitoring
-* Supports multiple network interfaces
-* Automatically detects network interfaces
-* C++ backend for network monitoring
-* D-Bus interface for communication between the backend and GNOME Shell
-* GNOME Shell 50 extension
-* Automatic background execution using systemd
-* Displays speeds using:
+* Real-time download and upload speed monitoring
+* Automatic detection of active network interfaces
+* Support for multiple network interfaces
+* C++ backend for fast, low-overhead network monitoring
+* D-Bus interface for IPC between backend and GNOME Shell
+* Native GNOME Shell 50 extension
+* Automatic background execution using systemd user services
+* Human-readable speed units: `B/s`, `KB/s`, `MB/s`
+* Lightweight with zero graphical application window overhead
 
-  * `B/s`
-  * `KB/s`
-  * `MB/s`
-* Lightweight and does not require a graphical application window
-
-Example:
+**Examples:**
 
 ```text
-↓ 125.42 KB/s   ↑ 18.7 KB/s
+↓ 125.42 KB/s  ↑ 18.7 KB/s
 ```
 
 or:
