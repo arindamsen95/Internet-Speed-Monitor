@@ -112,7 +112,7 @@ GNOME_EXTENSIONS_VERSION=$(gnome-extensions --version 2>/dev/null || true)
 echo "gnome-extensions: $GNOME_EXTENSIONS_VERSION"
 
 # ------------------------------------------------------------
-# Check GNOME Shell Version (Require >= 50)
+# Check GNOME Shell Version (Require == 50)
 # ------------------------------------------------------------
 
 if ! command -v gnome-shell >/dev/null 2>&1; then
@@ -197,8 +197,8 @@ sudo install -Dm644 \
     dbus/arindamsen95.NetworkSpeed.service \
     /usr/share/dbus-1/services/arindamsen95.NetworkSpeed.service
 
-# Force D-Bus session bus to reload service definitions immediately
-dbus-send --type=method_call --dest=org.freedesktop.DBus /org/freedesktop/DBus org.freedesktop.DBus.ReloadConfig 2>/dev/null || true
+# Reload D-Bus daemon configuration
+sudo systemctl reload dbus 2>/dev/null || true
 
 echo "Executable installed: /usr/bin/$TARGET_BIN"
 echo "D-Bus service installed: /usr/share/dbus-1/services/arindamsen95.NetworkSpeed.service"
@@ -261,17 +261,17 @@ echo "Extension installed to: $EXTENSION_DIR"
 echo
 echo "Attempting to enable GNOME extension..."
 
-# Sleep 1 second to ensure GNOME Shell file watchers index the new folder
+# Sleep 1 second to ensure file watchers index the directory
 sleep 1
 
-if gnome-extensions enable "$EXTENSION_UUID" 2>/dev/null; then
+if gnome-extensions enable "$EXTENSION_UUID"; then
     echo "GNOME extension enabled."
 else
-echo
+    echo
     echo "======================================================="
-    echo "NOTICE: Wayland / GNOME Shell limitation detected."
+    echo "NOTICE: Wayland / GNOME Shell session refresh needed."
     echo "GNOME Shell requires a session refresh to register new extensions."
-    echo "Please log out and log back in (or press Alt+F2 -> r -> Enter on X11)."
+    echo "Please log out and log back in."
     echo "After logging back in, run:"
     echo "    gnome-extensions enable $EXTENSION_UUID"
     echo "======================================================="
@@ -293,5 +293,5 @@ echo "Check GNOME extension:"
 echo "    gnome-extensions info $EXTENSION_UUID"
 echo
 echo "If the extension is not visible immediately,"
-echo "log out and log back in." 
+echo "log out and log back in."
 echo
