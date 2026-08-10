@@ -98,11 +98,9 @@ The interface provides two methods:
 For example:
 
 ```text
-GetDownload()
-    → 0.014925956726074219
+GetDownload() → 0.014925956726074219
 
-GetUpload()
-    → 0.0029611587524414062
+GetUpload() → 0.0029611587524414062
 ```
 
 The GNOME Shell extension receives these values and performs the final display formatting.
@@ -112,6 +110,7 @@ The GNOME Shell extension receives these values and performs the final display f
 # Project Structure
 
 ```text
+.
 .
 ├── extension/
 │   ├── extension.js
@@ -137,6 +136,8 @@ The GNOME Shell extension receives these values and performs the final display f
 ├── systemd/
 │   └── internet-speed.service
 │
+├── install.sh
+├── uninstall.sh
 ├── Makefile
 ├── .gitignore
 └── README.md
