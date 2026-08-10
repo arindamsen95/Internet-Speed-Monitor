@@ -88,16 +88,12 @@ The backend exposes the following D-Bus service:
 
 The interface provides two methods:
 
-```text
-GetDownload() → double
-GetUpload()   → double
-```
+### Exported Methods
 
-The returned value is in:
-
-```text
-MB/s
-```
+| Method | Return Type | Unit | Description |
+|---|---|---|---|
+| `GetDownload()` | `double` | MB/s | Returns current download rate |
+| `GetUpload()` | `double` | MB/s | Returns current upload rate |
 
 For example:
 
