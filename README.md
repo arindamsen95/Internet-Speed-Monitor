@@ -183,6 +183,12 @@ gnome-shell --version
 Clone the repository:
 
 ```bash
+git clone [https://github.com/arindamsen95/Internet-Speed-Monitor.git](https://github.com/arindamsen95/Internet-Speed-Monitor.git)
+cd Internet-Speed-Monitor
+```
+
+
+```bash
 git clone -b GNOME_Shell.V50 https://github.com/arindamsen95/Internet-Speed-Monitor.git
 cd Internet-Speed-Monitor
 ```
