@@ -178,15 +178,9 @@ gnome-shell --version
 
 ---
 
-# Building
+# Building & Installation
 
 Clone the repository:
-
-```bash
-git clone [https://github.com/arindamsen95/Internet-Speed-Monitor.git](https://github.com/arindamsen95/Internet-Speed-Monitor.git)
-cd Internet-Speed-Monitor
-```
-
 
 ```bash
 git clone -b GNOME_Shell.V50 https://github.com/arindamsen95/Internet-Speed-Monitor.git
@@ -199,9 +193,10 @@ Switch to the GNOME Shell 50 branch if necessary:
 git checkout GNOME_Shell.V50
 ```
 
-Install the project:
+Run the installer script::
 
 ```bash
+chmod +x install.sh
 ./install.sh
 ```
 
@@ -211,9 +206,10 @@ The executable will be created as:
 ./internet-speed
 ```
 
-To remove build files and project:
+To remove build artifacts and installed user services:
 
 ```bash
+chmod +x uninstall.sh
 ./uninstall.sh
 ```
 
