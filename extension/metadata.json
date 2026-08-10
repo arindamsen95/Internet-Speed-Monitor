@@ -4,8 +4,7 @@
     "description": "Displays internet download and upload speed in the GNOME top panel.",
     "version": 1,
     "shell-version": [
-        "50",
-        "50.1"
+   "45", "46", "47", "48", "49", "50"
     ],
      "url": "https://github.com/arindamsen95/Internet-Speed-Monitor"
 }
