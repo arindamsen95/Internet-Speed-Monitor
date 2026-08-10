@@ -721,24 +721,6 @@ Possible future improvements include:
 
 ---
 
-# License
-
-Add your chosen license here.
-
-For example, if you choose MIT:
-
-```text
-MIT License
-```
-
-A license file should be added to the repository as:
-
-```text
-LICENSE
-```
-
----
-
 # Author
 
 **Arindam Sen**
