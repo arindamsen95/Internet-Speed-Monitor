@@ -38,4 +38,6 @@ Thumbs.db
 *.o
 
 internet-speed
+NetworkSpeedDBus.h
+NetworkSpeedDBus.c
 
