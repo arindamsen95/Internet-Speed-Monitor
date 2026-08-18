@@ -91,6 +91,17 @@ if ! pkg-config --exists gio-2.0; then
     exit 1
 fi
 
+if ! command -v gdbus-codegen >/dev/null 2>&1; then
+    echo
+    echo "ERROR: 'gdbus-codegen' was not found."
+    echo
+    echo "Install it with:"
+    echo
+    echo "    sudo apt install libglib2.0-dev-bin"
+    echo
+    exit 1
+fi
+
 echo "GLib/GIO development files: OK"
 
 # ------------------------------------------------------------

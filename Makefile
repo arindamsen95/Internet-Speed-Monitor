@@ -24,7 +24,20 @@ OBJECTS = \
     src/NetworkManager.o \
     src/DBusService.o \
     src/NetworkSpeedDBus.o
+    
+# ============================================================
+# Generate D-Bus source files
+# ============================================================
 
+src/NetworkSpeedDBus.c src/NetworkSpeedDBus.h: src/NetworkSpeed.xml
+	gdbus-codegen \
+		--generate-c-code=src/NetworkSpeedDBus \
+		--c-namespace=Arindamsen95 \
+		src/NetworkSpeed.xml
+		
+# ============================================================
+# Build
+# ============================================================
 
 $(TARGET): $(OBJECTS)
 	$(CXX) $(OBJECTS) $(LDLIBS) -o $(TARGET)
@@ -67,10 +80,18 @@ src/NetworkSpeedDBus.o: src/NetworkSpeedDBus.c \
 	$(CC) $(CFLAGS) -c $< -o $@
 
 
+# ============================================================
+# Clean
+# ============================================================
+
 .PHONY: clean
 
 clean:
 	rm -f $(OBJECTS) $(TARGET)
+	
+# ============================================================
+# Install system components
+# ============================================================
 	
 .PHONY: clean install uninstall
 
