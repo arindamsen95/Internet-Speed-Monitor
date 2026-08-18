@@ -188,6 +188,7 @@ echo "Building Internet Speed Monitor"
 echo "=========================================="
 echo
 
+make clean
 make
 
 echo
