@@ -1,12 +1,11 @@
 CXX = g++
 CC = gcc
 
-CXXFLAGS = -std=c++17 -Wall $(shell pkg-config --cflags gio-2.0)
-CFLAGS = -Wall $(shell pkg-config --cflags gio-2.0)
+CXXFLAGS = -std=c++17 -Wall -I. $(shell pkg-config --cflags gio-2.0)
+CFLAGS = -Wall -I. $(shell pkg-config --cflags gio-2.0)
 LDLIBS = $(shell pkg-config --libs gio-2.0)
 
 TARGET = internet-speed
-
 
 PREFIX = /usr
 BINDIR = $(PREFIX)/bin
@@ -15,8 +14,6 @@ DBUS_SERVICES_DIR = $(PREFIX)/share/dbus-1/services
 EXTENSION_UUID = internet-speed@arindamsen95
 EXTENSION_DIR = $(HOME)/.local/share/gnome-shell/extensions/$(EXTENSION_UUID)
 
-
-
 OBJECTS = \
     src/main.o \
     src/NetworkMonitor.o \
@@ -24,7 +21,18 @@ OBJECTS = \
     src/NetworkManager.o \
     src/DBusService.o \
     src/NetworkSpeedDBus.o
-    
+
+# ============================================================
+# Default Target (MUST BE FIRST)
+# ============================================================
+
+.PHONY: all clean install uninstall
+
+all: $(TARGET)
+
+# Ensure gdbus-codegen runs BEFORE compiling any source files
+$(OBJECTS): | src/NetworkSpeedDBus.h
+
 # ============================================================
 # Generate D-Bus source files
 # ============================================================
@@ -32,9 +40,9 @@ OBJECTS = \
 src/NetworkSpeedDBus.c src/NetworkSpeedDBus.h: src/NetworkSpeed.xml
 	gdbus-codegen \
 		--generate-c-code=src/NetworkSpeedDBus \
-		--c-namespace=Arindamsen95 \
+		--c-namespace= \
 		src/NetworkSpeed.xml
-		
+
 # ============================================================
 # Build
 # ============================================================
@@ -42,23 +50,19 @@ src/NetworkSpeedDBus.c src/NetworkSpeedDBus.h: src/NetworkSpeed.xml
 $(TARGET): $(OBJECTS)
 	$(CXX) $(OBJECTS) $(LDLIBS) -o $(TARGET)
 
-
 src/main.o: src/main.cpp \
             src/NetworkManager.h \
             src/DBusService.h
 	$(CXX) $(CXXFLAGS) -c $< -o $@
-
 
 src/NetworkMonitor.o: src/NetworkMonitor.cpp \
                       src/NetworkMonitor.h \
                       src/NetworkSpeed.h
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-
 src/InterfaceDetector.o: src/InterfaceDetector.cpp \
                          src/InterfaceDetector.h
 	$(CXX) $(CXXFLAGS) -c $< -o $@
-
 
 src/NetworkManager.o: src/NetworkManager.cpp \
                       src/NetworkManager.h \
@@ -67,33 +71,26 @@ src/NetworkManager.o: src/NetworkManager.cpp \
                       src/NetworkSpeed.h
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-
 src/DBusService.o: src/DBusService.cpp \
                    src/DBusService.h \
                    src/NetworkManager.h \
                    src/NetworkSpeedDBus.h
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-
 src/NetworkSpeedDBus.o: src/NetworkSpeedDBus.c \
                         src/NetworkSpeedDBus.h
 	$(CC) $(CFLAGS) -c $< -o $@
-
 
 # ============================================================
 # Clean
 # ============================================================
 
-.PHONY: clean
-
 clean:
-	rm -f $(OBJECTS) $(TARGET)
-	
+	rm -f $(OBJECTS) $(TARGET) src/NetworkSpeedDBus.c src/NetworkSpeedDBus.h
+
 # ============================================================
-# Install system components
+# Install / Uninstall
 # ============================================================
-	
-.PHONY: clean install uninstall
 
 install: $(TARGET)
 	install -Dm755 $(TARGET) $(DESTDIR)$(BINDIR)/$(TARGET)
