@@ -10,7 +10,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-22.04, ubuntu-24.04, ubuntu-latest]
+        os: [ubuntu-26.04, ubuntu-24.04]
 
     steps:
       - name: Checkout Repository
@@ -18,13 +18,22 @@ jobs:
 
       - name: Install System Dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y \
+          sudo apt update
+          sudo apt install -y \
             build-essential \
             libglib2.0-dev \
             libglib2.0-dev-bin \
             pkg-config \
+            gdbus \
             zip
+
+      - name: Check required tools
+        run: |
+          gcc --version
+          g++ --version
+          make --version
+          pkg-config --version
+          gdbus --version
 
       - name: Clean and Build Application
         run: |
@@ -36,12 +45,10 @@ jobs:
           test -f internet-speed
           ./internet-speed --help || true
 
-      - name: Bundle GNOME Extension ZIP
+      - name: Check generated D-Bus files
         run: |
-          cd extension
-          zip -r ../internet-speed@arindamsen95.zip .
-          cd ..
-          test -f internet-speed@arindamsen95.zip
+          test -f src/NetworkSpeedDBus.c
+          test -f src/NetworkSpeedDBus.h
 
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
