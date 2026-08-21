@@ -32,7 +32,7 @@ jobs:
           g++ --version
           make --version
           pkg-config --version
-          gdbus --version
+          dpkg -s libglib2.0-bin | grep Version
 
       - name: Clean and Build Application
         run: |
