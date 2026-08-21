@@ -1,0 +1,54 @@
+name: Build Internet Speed Monitor
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build:
+    name: Build on Ubuntu Matrix
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-22.04, ubuntu-24.04, ubuntu-latest]
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install System Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential \
+            libglib2.0-dev \
+            libglib2.0-dev-bin \
+            pkg-config \
+            zip
+
+      - name: Clean and Build Application
+        run: |
+          make clean
+          make -j$(nproc)
+
+      - name: Verify Executable Creation
+        run: |
+          test -f internet-speed
+          ./internet-speed --help || true
+
+      - name: Bundle GNOME Extension ZIP
+        run: |
+          cd extension
+          zip -r ../internet-speed@arindamsen95.zip .
+          cd ..
+          test -f internet-speed@arindamsen95.zip
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: internet-speed-ubuntu-${{ matrix.os }}
+          path: |
+            internet-speed
+            internet-speed@arindamsen95.zip
