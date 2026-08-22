@@ -10,7 +10,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-26.04, ubuntu-24.04]
+        os: [ubuntu-26.04, ubuntu-24.04, ubuntu-22.04]
 
     steps:
       - name: Checkout Repository
@@ -42,13 +42,21 @@ jobs:
       - name: Verify Executable Creation
         run: |
           test -f internet-speed
-          ./internet-speed --help || true
+          # Use timeout (2 seconds) so a non-exiting D-Bus daemon doesn't block CI
+          timeout 2s ./internet-speed || [ $? -eq 124 ]
 
       - name: Check generated D-Bus files
         run: |
           test -f src/NetworkSpeedDBus.c
           test -f src/NetworkSpeedDBus.h
 
+      - name: Bundle GNOME Extension ZIP
+        run: |
+          cd extension
+          zip -r ../internet-speed@arindamsen95.zip .
+          cd ..
+          test -f internet-speed@arindamsen95.zip
+  
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
         with:
