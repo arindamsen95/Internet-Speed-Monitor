@@ -29,7 +29,10 @@ jobs:
             libglib2.0-dev \
             libglib2.0-dev-bin \
             pkg-config \
-            zip
+            zip \
+            gjs \
+            gnome-shell \
+            node-eslint
 
       - name: Check required tools
         run: |
