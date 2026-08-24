@@ -10,13 +10,16 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-26.04, ubuntu-24.04, ubuntu-22.04]
+        os: [ubuntu-26.04, ubuntu-24.04]
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
       - name: Install System Dependencies
+        env:
+          DEBIAN_FRONTEND: noninteractive
+          NEEDRESTART_MODE: a
         run: |
           sudo apt-get update
           sudo apt-get install -y \
