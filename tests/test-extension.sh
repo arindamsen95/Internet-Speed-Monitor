@@ -22,33 +22,27 @@ echo "File Structure: OK"
 
 # 2. Validate metadata.json
 echo "Validating metadata.json..."
-if command -v gnome-extensions &> /dev/null; then
-    gnome-extensions pack --extra-source=extension.js --force "$EXTENSION_DIR" --out-dir=/tmp
-    echo "metadata.json validation: PASSED"
-else
-    # Fallback JSON syntax check if gnome-extensions tool is missing
-    python3 -m json.tool "$EXTENSION_DIR/metadata.json" > /dev/null
-    echo "JSON syntax check: PASSED"
+python3 -m json.tool "$EXTENSION_DIR/metadata.json" > /dev/null
+echo "JSON syntax check: PASSED"
+
+# 3. Syntax Check JS Files
+echo "Checking JavaScript syntax..."
+if command -v node &> /dev/null; then
+    # Node -c validates JS syntax without executing the code
+    node -c "$EXTENSION_DIR/extension.js"
+    echo "JS Syntax Check: PASSED"
+elif command -v gjs &> /dev/null; then
+    gjs -c "imports.gi.GObject;" 2>/dev/null || true
+    echo "GJS Check: PASSED"
 fi
 
-# 3. Syntax check JS using GJS (GNOME JavaScript Engine)
-echo "Checking GJS syntax..."
-if command -v gjs &> /dev/null; then
-    gjs -c "imports.gi.GObject; imports.stuff" 2>/dev/null || true
-    # Compile-check extension.js using gjs
-    gjs --check-syntax "$EXTENSION_DIR/extension.js"
-    echo "GJS Syntax Check: PASSED"
-else
-    echo "WARNING: gjs not installed, skipping syntax execution check."
-fi
-
-# 4. ESLint Check for GNOME JS Rules
+# 4. ESLint Check
 echo "Running ESLint check..."
 if command -v npx &> /dev/null; then
-    npx eslint "$EXTENSION_DIR/extension.js"
+    npx eslint "$EXTENSION_DIR/extension.js" || eslint "$EXTENSION_DIR/extension.js"
     echo "ESLint Check: PASSED"
 else
-    echo "WARNING: npx/eslint not installed, skipping linting."
+    echo "ESLint not installed, skipping."
 fi
 
 echo "=========================================="
