@@ -37,7 +37,7 @@ $(OBJECTS): | src/NetworkSpeedDBus.h
 # Generate D-Bus source files
 # ============================================================
 
-src/NetworkSpeedDBus.c src/NetworkSpeedDBus.h: src/NetworkSpeed.xml
+src/NetworkSpeedDBus.c src/NetworkSpeedDBus.h &: src/NetworkSpeed.xml
 	gdbus-codegen \
 		--generate-c-code=src/NetworkSpeedDBus \
 		--c-namespace= \
