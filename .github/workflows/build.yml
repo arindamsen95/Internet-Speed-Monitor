@@ -59,6 +59,11 @@ jobs:
           zip -r ../internet-speed@arindamsen95.zip .
           cd ..
           test -f internet-speed@arindamsen95.zip
+
+      - name: Validate GNOME Extension Metadata
+        run: |
+          python3 -m json.tool extension/metadata.json > /dev/null
+          test "$(python3 -c "import json; print(json.load(open('extension/metadata.json'))['uuid'])")" = "internet-speed@arindamsen95"
   
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
