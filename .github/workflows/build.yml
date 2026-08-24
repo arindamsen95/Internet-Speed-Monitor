@@ -60,6 +60,11 @@ jobs:
           chmod +x tests/test-dbus.sh
           ./tests/test-dbus.sh
 
+      - name: Run GNOME Extension Tests
+        run: |
+          chmod +x tests/test-extension.sh
+          ./tests/test-extension.sh
+
       - name: Validate GNOME Extension Metadata
         run: |
           python3 -m json.tool extension/metadata.json > /dev/null
