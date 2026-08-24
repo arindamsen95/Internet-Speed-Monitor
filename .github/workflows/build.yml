@@ -18,20 +18,24 @@ jobs:
 
       - name: Install System Dependencies
         run: |
-          # Completely disable needrestart prompts for Ubuntu 24.04 / 26.04
+          # Prevent needrestart prompts
           sudo mkdir -p /etc/needrestart/conf.d
           echo '$nrconf{restart} = "a";' | sudo tee /etc/needrestart/conf.d/50no-prompt.conf
-          
-          # Install build dependencies cleanly
+
+          # Mask systemd service triggers inside headless CI containers
+          sudo mkdir -p /etc/systemd/system/
+          sudo ln -sf /dev/null /etc/systemd/system/systemd-oomd.service
+
+          # Install packages without pulling full desktop environment
           sudo DEBIAN_FRONTEND=noninteractive apt-get update
-          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
             build-essential \
             libglib2.0-dev \
             libglib2.0-dev-bin \
             pkg-config \
             zip \
             gjs \
-            gnome-shell \
+            gnome-shell-common \
             node-eslint
 
       - name: Check required tools
