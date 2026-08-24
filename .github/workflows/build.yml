@@ -18,15 +18,14 @@ jobs:
 
       - name: Install System Dependencies
         run: |
-          # Prevent needrestart prompts
-          sudo mkdir -p /etc/needrestart/conf.d
-          echo '$nrconf{restart} = "a";' | sudo tee /etc/needrestart/conf.d/50no-prompt.conf
+          # 1. Purge needrestart to prevent hanging on Ubuntu 24.04 / 26.04
+          sudo apt-get remove -y needrestart || true
 
-          # Mask systemd service triggers inside headless CI containers
+          # 2. Mask systemd services that block headless containers
           sudo mkdir -p /etc/systemd/system/
           sudo ln -sf /dev/null /etc/systemd/system/systemd-oomd.service
 
-          # Install packages without pulling full desktop environment
+          # 3. Install build tools without interactive prompts
           sudo DEBIAN_FRONTEND=noninteractive apt-get update
           sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
             build-essential \
@@ -36,8 +35,9 @@ jobs:
             zip \
             gjs \
             gnome-shell-common \
-            node-eslint
-
+            node-eslint \
+            nodejs
+            
       - name: Check required tools
         run: |
           gcc --version
