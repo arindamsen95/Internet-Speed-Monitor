@@ -18,25 +18,14 @@ jobs:
 
       - name: Install System Dependencies
         run: |
-          # 1. Purge needrestart to prevent hanging on Ubuntu 24.04 / 26.04
           sudo apt-get remove -y needrestart || true
-
-          # 2. Mask systemd services that block headless containers
-          sudo mkdir -p /etc/systemd/system/
-          sudo ln -sf /dev/null /etc/systemd/system/systemd-oomd.service
-
-          # 3. Install build tools without interactive prompts
           sudo DEBIAN_FRONTEND=noninteractive apt-get update
           sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
             build-essential \
             libglib2.0-dev \
             libglib2.0-dev-bin \
             pkg-config \
-            zip \
-            gjs \
-            gnome-shell-common \
-            node-eslint \
-            nodejs
+            zip
             
       - name: Check required tools
         run: |
