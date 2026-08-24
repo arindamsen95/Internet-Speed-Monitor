@@ -1,0 +1,21 @@
+{
+  "env": {
+    "es2022": true,
+    "gnome-shell": true
+  },
+  "extends": "eslint:recommended",
+  "globals": {
+    "global": "readonly",
+    "imports": "readonly",
+    "log": "readonly",
+    "logError": "readonly"
+  },
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "rules": {
+    "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "no-undef": "error"
+  }
+}
